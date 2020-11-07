@@ -1,0 +1,16 @@
+#include <iostream>
+#include <map>
+
+#include "otusAllocator.hpp"
+
+using namespace simple_allocator;
+
+int main()
+{
+    std::map<int, int, std::less<>, Light_Pool_Allocator<std::pair<const int, int>, 1000>> my_map;
+
+    my_map[0] = 3;
+    my_map[6] = 50;
+
+    return 0;
+}

@@ -1,11 +1,16 @@
 cmake_minimum_required(VERSION 3.6)
 
-project(allocator)
+project(Main)
 
-add_executable(main otusAllocator.cpp otusAllocator.hpp)
+add_executable(main main.cpp)
+
+target_include_directories(main 
+            PRIVATE 
+            ${CMAKE_CURRENT_SOURCE_DIR}/allocator
+)
 
 set_target_properties(main 
-PROPERTIES
-CXX_STANDARD 17
-CXX_STANDARD_REQUIRED ON
+            PROPERTIES
+            CXX_STANDARD 14
+            CXX_STANDARD_REQUIRED ON
 )
