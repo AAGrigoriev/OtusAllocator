@@ -2,6 +2,7 @@
 #include <map>
 
 #include "otusAllocator.hpp"
+#include "simpleList.hpp"
 
 using namespace simple_allocator;
 

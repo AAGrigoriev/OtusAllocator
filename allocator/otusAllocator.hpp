@@ -5,7 +5,6 @@
 
 namespace simple_allocator
 {
-
     template <typename T, std::size_t memmoryCapacity>
     struct Light_Pool_Allocator
     {
@@ -30,19 +29,12 @@ namespace simple_allocator
         std::size_t rec_init()
         {
             constexpr std::size_t chunkCount = (memmoryCapacity / sizeof(T)) - 1;
-            std::cout << "chunkCount = " << chunkCount << std::endl;
-            std::cout << sizeof(T) << std::endl;
             for (std::size_t i = 0; i < chunkCount; ++i)
             {
                 std::uint8_t *chunkPtr = memmory + (i * sizeof(T));
-                printf("currentPtr = %p ", chunkPtr);
                 *(reinterpret_cast<std::uint8_t **>(chunkPtr)) = chunkPtr + sizeof(T);
-                printf(" nextAddres = %p ", *(reinterpret_cast<uint8_t **>(chunkPtr)));
             }
-            std::cout << std::endl;
             *(reinterpret_cast<std::uint8_t **>(&memmory[chunkCount * sizeof(T)])) = nullptr;
-            printf("\nend memmory = %p ", (reinterpret_cast<std::uint8_t **>(&memmory[chunkCount * sizeof(T)])));
-            printf("  end memmory = %p ", *(reinterpret_cast<std::uint8_t **>(&memmory[chunkCount * sizeof(T)])));
             head = memmory;
             return 0;
         }
@@ -68,11 +60,8 @@ namespace simple_allocator
         assert(n == 1 && "allocate only one object");
 
         T *out = reinterpret_cast<T *>(head);
-        printf("\nAlloc\n");
-        printf("address current = %p \n", out);
 
         head = *(reinterpret_cast<uint8_t **>(head));
-        printf("address head = %p \n", head);
 
         return out;
     }
@@ -83,9 +72,6 @@ namespace simple_allocator
         assert(n == 1 && "allocate only one object");
 
         *(reinterpret_cast<std::uint8_t **>(p)) = head;
-        printf("dealloc \n");
-        printf("addres head = %p \n", head);
-        printf("addres free = %p \n", p);
         head = reinterpret_cast<std::uint8_t *>(p);
     }
 

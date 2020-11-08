@@ -7,6 +7,7 @@ add_executable(main main.cpp)
 target_include_directories(main 
             PRIVATE 
             ${CMAKE_CURRENT_SOURCE_DIR}/allocator
+            ${CMAKE_CURRENT_SOURCE_DIR}/sList
 )
 
 set_target_properties(main 
