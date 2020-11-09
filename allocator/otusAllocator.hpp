@@ -26,7 +26,8 @@ namespace simple_allocator
         void deallocate(T *p, std::size_t n);
 
     private:
-        std::size_t rec_init()
+
+        void rec_init()
         {
             constexpr std::size_t chunkCount = (memmoryCapacity / sizeof(T)) - 1;
             for (std::size_t i = 0; i < chunkCount; ++i)
@@ -36,7 +37,6 @@ namespace simple_allocator
             }
             *(reinterpret_cast<std::uint8_t **>(&memmory[chunkCount * sizeof(T)])) = nullptr;
             head = memmory;
-            return 0;
         }
 
         std::uint8_t memmory[memmoryCapacity];
@@ -69,7 +69,7 @@ namespace simple_allocator
     template <typename T, std::size_t memmoryCapacity>
     void Light_Pool_Allocator<T, memmoryCapacity>::deallocate(T *p, std::size_t n)
     {
-        assert(n == 1 && "allocate only one object");
+        assert(n == 1 && "deallocate only one object");
 
         *(reinterpret_cast<std::uint8_t **>(p)) = head;
         head = reinterpret_cast<std::uint8_t *>(p);
