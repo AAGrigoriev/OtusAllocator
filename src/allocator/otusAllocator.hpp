@@ -19,14 +19,25 @@ namespace simple_allocator
         };
 
         template <typename U, std::size_t N>
-        Light_Pool_Allocator(const Light_Pool_Allocator<U, N> &);
+        Light_Pool_Allocator(const Light_Pool_Allocator<U, N> &) {}
 
         T *allocate(std::size_t n);
 
-        void deallocate(T *p, std::size_t n);
+        template <typename U, typename... Args>
+        void construct(U *ptr, Args &&... args)
+        {
+            new (ptr) U(std::forward<Args>(args)...);
+        }
+
+        void deallocate(T *ptr, std::size_t n);
+
+        template <typename U>
+        void destroy(U *ptr)
+        {
+             ptr->~U();
+        }
 
     private:
-
         void rec_init()
         {
             constexpr std::size_t chunkCount = (memmoryCapacity / sizeof(T)) - 1;
@@ -55,6 +66,8 @@ namespace simple_allocator
     template <typename T, std::size_t memmoryCapacity>
     T *Light_Pool_Allocator<T, memmoryCapacity>::allocate(std::size_t n)
     {
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+
         assert(head != nullptr && "end of memmory in Light_Pool_Allocator");
 
         assert(n == 1 && "allocate only one object");
@@ -74,6 +87,18 @@ namespace simple_allocator
         *(reinterpret_cast<std::uint8_t **>(p)) = head;
         head = reinterpret_cast<std::uint8_t *>(p);
     }
+
+   // template <typename U, typename... Args>
+    //void Light_Pool_Allocator<U, Args>::construct(U *ptr, Args &&... args)
+    //{
+    //            new (ptr) U(std::forward<Args>(args)...);
+   // }
+
+//    template <typename U>
+ //   void Light_Pool_Allocator<U>::destroy(U *ptr)
+ //   {
+  //      ptr->~U();
+  //  }
 
     template <class T, class U, std::size_t N>
     constexpr bool operator==(const Light_Pool_Allocator<T, N> &, const Light_Pool_Allocator<U, N> &) noexcept

@@ -9,7 +9,7 @@ using namespace slist;
 
 int main()
 {
-    sForwardList<double,Light_Pool_Allocator<double,1000>> list;
+    sForwardList<double,Light_Pool_Allocator<double,1024>> list;
 
     std::map<int, int, std::less<>, Light_Pool_Allocator<std::pair<const int, int>, 1000>> my_map;
 
