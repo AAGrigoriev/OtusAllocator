@@ -10,11 +10,12 @@ namespace slist
         struct Node
         {
             T data;
-            Node *next;
+            Node *next = nullptr;
         };
 
-        using AllocatorTraits = std::allocator_traits<Allocator>;
-        using RebindAllocNode = typename AllocatorTraits::template rebind_alloc<Node>;
+        //using AllocatorTraits = std::allocator_traits<Allocator>;
+        //using RebindAllocNode = typename AllocatorTraits::template rebind_alloc<Node>;
+        using RebindAllocNode = typename Allocator::template rebind<Node>::other;
 
         class Iterator : public std::iterator<std::input_iterator_tag, T>
         {
@@ -84,7 +85,7 @@ namespace slist
         try
         {
             Node *node = allocator_node.allocate(1);
-            allocator_node.construct(node, {t, m_head});
+            allocator_node.construct(node, Node{t, m_head});
             //node->next = m_head;
             m_head = node;
         }
@@ -102,7 +103,7 @@ namespace slist
             Node *next = m_head->next;
 
             allocator_node.destroy(m_head);
-            allocator_node.deallocate(m_head,1);
+            allocator_node.deallocate(m_head, 1);
 
             m_head = next;
         }

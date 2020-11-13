@@ -1,5 +1,6 @@
 #include <iostream>
 #include <map>
+#include <list>
 
 #include "otusAllocator.hpp"
 #include "simpleList.hpp"
@@ -9,7 +10,17 @@ using namespace slist;
 
 int main()
 {
-    sForwardList<double,Light_Pool_Allocator<double,1024>> list;
+
+
+    std::list<double, Light_Pool_Allocator<double, 120>> list;
+    list.push_back(1.0);
+    list.push_back(1.0);
+    list.push_back(1.0);
+
+
+    sForwardList<double,Light_Pool_Allocator<double,64>> list2;
+
+    list2.addTail(12.2);
 
     std::map<int, int, std::less<>, Light_Pool_Allocator<std::pair<const int, int>, 1000>> my_map;
 
