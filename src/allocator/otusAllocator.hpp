@@ -28,8 +28,6 @@ namespace simple_allocator
         template <typename U, typename... Args>
         void construct(U *ptr, Args &&... args)
         {
-            std::cout << __PRETTY_FUNCTION__ << std::endl;
-
             new (ptr) U(std::forward<Args>(args)...);
         }
 
@@ -38,8 +36,6 @@ namespace simple_allocator
         template <typename U>
         void destroy(U *ptr)
         {
-            std::cout << __PRETTY_FUNCTION__ << std::endl;
-
             ptr->~U();
         }
 
@@ -47,7 +43,7 @@ namespace simple_allocator
     
         void rec_init()
         {
-            constexpr std::size_t chunkCount = (memmoryCapacity / sizeof(T)) - 1;
+            std::size_t chunkCount = (memmoryCapacity / sizeof(T)) - 1;
             for (std::size_t i = 0; i < chunkCount; ++i)
             {
                 std::uint8_t *chunkPtr = memmory + (i * sizeof(T));
@@ -73,8 +69,6 @@ namespace simple_allocator
     template <typename T, std::size_t memmoryCapacity>
     T *Light_Pool_Allocator<T, memmoryCapacity>::allocate(std::size_t n)
     {
-        std::cout << __PRETTY_FUNCTION__ << std::endl;
-
         assert(head != nullptr && "end of memmory in Light_Pool_Allocator");
 
         assert(n == 1 && "allocate only one object");
@@ -89,8 +83,6 @@ namespace simple_allocator
     template <typename T, std::size_t memmoryCapacity>
     void Light_Pool_Allocator<T, memmoryCapacity>::deallocate(T *p, std::size_t n)
     {
-        std::cout << __PRETTY_FUNCTION__ << std::endl;
-
         assert(n == 1 && "deallocate only one object");
 
         *(reinterpret_cast<std::uint8_t **>(p)) = head;

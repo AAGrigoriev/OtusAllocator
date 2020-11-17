@@ -24,3 +24,5 @@ target_include_directories(
     ${TEST_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../src
 )
+
+add_test(gtest_allocator gtest_allocator) # ??? 
