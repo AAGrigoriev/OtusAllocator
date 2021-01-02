@@ -1,13 +1,12 @@
 #pragma once
 
-#include <array>
 #include <assert.h>
 
 /* Аллакатор для структур данных одинакового размера и создаваемых по 1 */
 
 namespace simple_allocator
 {
-    template <typename T, std::size_t memmoryCapacity>
+    template <typename T, std::size_t countBlock,template<class,std::size_t> class Strategy>
     struct Light_Pool_Allocator
     {
         using value_type = T;
@@ -17,7 +16,7 @@ namespace simple_allocator
         template <typename U>
         struct rebind
         {
-            using other = Light_Pool_Allocator<U, memmoryCapacity>;
+            using other = Light_Pool_Allocator<U, countBlock, Strategy>;
         };
 
         template <typename U, std::size_t N>
@@ -43,7 +42,7 @@ namespace simple_allocator
     
         void rec_init()
         {
-            std::size_t chunkCount = (memmoryCapacity / sizeof(T)) - 1;
+            std::size_t chunkCount = (countBlock / sizeof(T)) - 1;
             for (std::size_t i = 0; i < chunkCount; ++i)
             {
                 std::uint8_t *chunkPtr = memmory + (i * sizeof(T));
@@ -53,21 +52,21 @@ namespace simple_allocator
             head = memmory;
         }
 
-        std::uint8_t memmory[memmoryCapacity];
+        std::uint8_t memmory[countBlock];
         std::uint8_t *head;
     };
 
-    template <typename T, std::size_t memmoryCapacity>
-    Light_Pool_Allocator<T, memmoryCapacity>::Light_Pool_Allocator()
+    template <typename T, std::size_t countBlock>
+    Light_Pool_Allocator<T, countBlock>::Light_Pool_Allocator()
     {
         static_assert(sizeof(T) >= 8 && "type size must be greater then pointer on 64 bit");
-        static_assert(memmoryCapacity % sizeof(T) == 0 && "Total memmory must be multiple of size T");
+        static_assert(countBlock % sizeof(T) == 0 && "Total memmory must be multiple of size T");
 
         rec_init();
     }
 
-    template <typename T, std::size_t memmoryCapacity>
-    T *Light_Pool_Allocator<T, memmoryCapacity>::allocate(std::size_t n)
+    template <typename T, std::size_t countBlock>
+    T *Light_Pool_Allocator<T, countBlock>::allocate(std::size_t n)
     {
         assert(head != nullptr && "end of memmory in Light_Pool_Allocator");
 
@@ -80,8 +79,8 @@ namespace simple_allocator
         return out;
     }
 
-    template <typename T, std::size_t memmoryCapacity>
-    void Light_Pool_Allocator<T, memmoryCapacity>::deallocate(T *p, std::size_t n)
+    template <typename T, std::size_t countBlock>
+    void Light_Pool_Allocator<T, countBlock>::deallocate(T *p, std::size_t n)
     {
         assert(n == 1 && "deallocate only one object");
 
