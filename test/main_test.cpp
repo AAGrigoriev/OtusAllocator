@@ -7,7 +7,7 @@ using namespace std;
 using namespace slist;
 using namespace simple_allocator;
 
-TEST(allocator, overflow)
+/*TEST(allocator, overflow)
 {
   std::list<double, Light_Pool_Allocator<double, 216>> list;
   ASSERT_NO_THROW(list.push_back(0));
@@ -49,3 +49,4 @@ int main(int argc, char **argv)
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
+*/
