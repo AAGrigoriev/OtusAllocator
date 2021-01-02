@@ -31,7 +31,7 @@ public:
 
         T *out = reinterpret_cast<T *>(head);
 
-        head = *(reinterpret_cast<std::uint8_t **>(head))
+        head = *(reinterpret_cast<std::uint8_t **>(head));
     }
 
     void deallocate(T *ptr, std::size_t n = 1)

@@ -7,8 +7,8 @@
 
 /*!
     @brief Expand strategy
-    idea author - sergey-bulanov76 
-    https://github.com/azbyx/custom_allocator
+    thanks - sergey-bulanov76 
+    https://github.com/azbyx/
 */
 
 template <typename T, std::size_t countBlock>
@@ -31,8 +31,10 @@ public:
     ~realloc_strategy();
 
 private:
+    struct pointer_wrapper;
+
     /*!
-    @brief create linked list with size = countBlock 
+        @brief create linked list with size = countBlock 
     */
     pointer_wrapper *add_list()
     {
@@ -62,7 +64,7 @@ private:
 };
 
 template <typename T, std::size_t countBlock>
-T *realloc_strategy<T, std::size_t countBlock>::allocate(T *ptr, std::size_t n = 1)
+T *realloc_strategy<T, countBlock>::allocate(std::size_t n)
 {
     assert(n == 1 && "allocate only one object");
 
@@ -73,14 +75,14 @@ T *realloc_strategy<T, std::size_t countBlock>::allocate(T *ptr, std::size_t n =
         v_pointer.push_back(pointer_free);
     }
 
-    auto ptr = pointer_free;
+    auto out = pointer_free;
     pointer_free = pointer_free.next;
 
     return out;
 }
 
 template <typename T, std::size_t countBlock>
-void realloc_strategy<T, std::size_t countBlock>::deallocate(T *ptr, std::size_t n = 1)
+void realloc_strategy<T,countBlock>::deallocate(T *ptr, std::size_t n)
 {
     auto dealloc_ptr = reinterpret_cast<pointer_wrapper *>(ptr);
     dealloc_ptr.next = pointer_free;
@@ -88,7 +90,7 @@ void realloc_strategy<T, std::size_t countBlock>::deallocate(T *ptr, std::size_t
 }
 
 template <typename T, std::size_t countBlock>
-realloc_strategy<T, std::size_t countBlock>::~realloc_strategy()
+realloc_strategy<T,countBlock>::~realloc_strategy()
 {
     for (auto ptr : v_pointer)
     {
