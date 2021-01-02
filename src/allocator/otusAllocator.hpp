@@ -6,7 +6,7 @@
 
 namespace simple_allocator
 {
-    template <typename T, std::size_t countBlock,template<class,std::size_t> class Strategy>
+    template <typename T, std::size_t countBlock, template <class, std::size_t> class Strategy>
     struct Light_Pool_Allocator
     {
         using value_type = T;
@@ -19,8 +19,8 @@ namespace simple_allocator
             using other = Light_Pool_Allocator<U, countBlock, Strategy>;
         };
 
-        template <typename U, std::size_t N>
-        Light_Pool_Allocator(const Light_Pool_Allocator<U, N> &) {}
+        template <typename U>
+        Light_Pool_Allocator(const Light_Pool_Allocator<U, countBlock,Strategy> &) {}
 
         T *allocate(std::size_t n);
 
@@ -38,54 +38,27 @@ namespace simple_allocator
             ptr->~U();
         }
 
-    private:
-    
-        void rec_init()
-        {
-            std::size_t chunkCount = (countBlock / sizeof(T)) - 1;
-            for (std::size_t i = 0; i < chunkCount; ++i)
-            {
-                std::uint8_t *chunkPtr = memmory + (i * sizeof(T));
-                *(reinterpret_cast<std::uint8_t **>(chunkPtr)) = chunkPtr + sizeof(T);
-            }
-            *(reinterpret_cast<std::uint8_t **>(&memmory[chunkCount * sizeof(T)])) = nullptr;
-            head = memmory;
-        }
 
-        std::uint8_t memmory[countBlock];
-        std::uint8_t *head;
+    private:
+        Strategy<T,countBlock> alloc_strategy;
     };
 
-    template <typename T, std::size_t countBlock>
-    Light_Pool_Allocator<T, countBlock>::Light_Pool_Allocator()
+    template <typename T, std::size_t countBlock, template <class, std::size_t> class Strategy>
+    Light_Pool_Allocator<T, countBlock,Strategy>::Light_Pool_Allocator()
     {
-        static_assert(sizeof(T) >= 8 && "type size must be greater then pointer on 64 bit");
-        static_assert(countBlock % sizeof(T) == 0 && "Total memmory must be multiple of size T");
 
-        rec_init();
     }
 
-    template <typename T, std::size_t countBlock>
-    T *Light_Pool_Allocator<T, countBlock>::allocate(std::size_t n)
+    template <typename T, std::size_t countBlock, template <class, std::size_t> class Strategy>
+    T *Light_Pool_Allocator<T, countBlock,Strategy>::allocate(std::size_t n)
     {
-        assert(head != nullptr && "end of memmory in Light_Pool_Allocator");
 
-        assert(n == 1 && "allocate only one object");
-
-        T *out = reinterpret_cast<T *>(head);
-
-        head = *(reinterpret_cast<uint8_t **>(head));
-
-        return out;
     }
 
-    template <typename T, std::size_t countBlock>
-    void Light_Pool_Allocator<T, countBlock>::deallocate(T *p, std::size_t n)
+    template <typename T, std::size_t countBlock, template <class, std::size_t> class Strategy>
+    void Light_Pool_Allocator<T, countBlock,Strategy>::deallocate(T *p, std::size_t n)
     {
-        assert(n == 1 && "deallocate only one object");
 
-        *(reinterpret_cast<std::uint8_t **>(p)) = head;
-        head = reinterpret_cast<std::uint8_t *>(p);
     }
 
     // template <typename U, typename... Args>
@@ -100,14 +73,14 @@ namespace simple_allocator
     //      ptr->~U();
     //  }
 
-    template <class T, class U, std::size_t N>
-    constexpr bool operator==(const Light_Pool_Allocator<T, N> &, const Light_Pool_Allocator<U, N> &) noexcept
+    template <class T, class U, std::size_t N, template <class, std::size_t> class Strategy>
+    constexpr bool operator==(const Light_Pool_Allocator<T, N,Strategy> &, const Light_Pool_Allocator<U, N,Strategy> &) noexcept
     {
         return false;
     }
 
-    template <class T, class U, std::size_t N>
-    constexpr bool operator!=(const Light_Pool_Allocator<T, N> &, const Light_Pool_Allocator<U, N> &) noexcept
+    template <class T, class U, std::size_t N, template <class, std::size_t> class Strategy>
+    constexpr bool operator!=(const Light_Pool_Allocator<T, N,Strategy> &, const Light_Pool_Allocator<U, N,Strategy> &) noexcept
     {
         return true;
     }

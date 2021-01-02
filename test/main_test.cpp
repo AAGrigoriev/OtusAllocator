@@ -43,10 +43,9 @@ TEST(allocator, alloc_dealloc)
 
   ASSERT_EQ(ptr1,ptr2);
 }
-
+*/
 int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-*/

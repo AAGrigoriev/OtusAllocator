@@ -31,23 +31,22 @@ public:
     ~realloc_strategy();
 
 private:
-
     /*!
     @brief create linked list with size = countBlock 
     */
     pointer_wrapper *add_list()
     {
         static_assert(countBlock > 1 && "wrong countBlock");
-        static_assert(sizeof T >= sizeof T * &&"type size must be greater then pointer");
+        static_assert(sizeof(T) >= sizeof(T *) && "type size must be greater then pointer");
 
-        pointer_wrapper *list = ::operator new(sizeof T *countBlock);
+        pointer_wrapper *list = ::operator new(sizeof(T) * countBlock);
 
         for (std::size_t i = 0; i < countBlock - 1; i++)
         {
-            *(list + i * sizeof T) = (list + (i + 1) * sizeof T);
+            *(list + i * sizeof(T)) = (list + (i + 1) * sizeof(T));
         }
 
-        *(list + (countBlock - 1) * sizeof T) = nullptr;
+        *(list + (countBlock - 1) * sizeof(T)) = nullptr;
 
         return list;
     }
@@ -83,7 +82,7 @@ T *realloc_strategy<T, std::size_t countBlock>::allocate(T *ptr, std::size_t n =
 template <typename T, std::size_t countBlock>
 void realloc_strategy<T, std::size_t countBlock>::deallocate(T *ptr, std::size_t n = 1)
 {
-    auto dealloc_ptr = reinterpret_cast<pointer_wrapper*>(ptr);
+    auto dealloc_ptr = reinterpret_cast<pointer_wrapper *>(ptr);
     dealloc_ptr.next = pointer_free;
     pointer_free = dealloc_ptr;
 }

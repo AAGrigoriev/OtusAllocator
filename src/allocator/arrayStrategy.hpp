@@ -12,7 +12,7 @@ class array_staregy
 public:
     array_staregy()
     {
-        std::size_t chunkCount = (countBlock / sizeof(T)) - 1; // ошибка 
+        std::size_t chunkCount = countBlock - 1; 
         for (std::size_t i = 0; i < chunkCount; ++i)
         {
             std::uint8_t *chunkPtr = memmory + (i * sizeof(T));
@@ -21,6 +21,7 @@ public:
         *(reinterpret_cast<std::uint8_t **>(&memmory[chunkCount * sizeof(T)])) = nullptr;
         head = memmory;
     }
+
     ~array_staregy() = default;
 
     T *allocate(std::size_t n = 1)
@@ -36,10 +37,10 @@ public:
     void deallocate(T *ptr, std::size_t n = 1)
     {
         *(reinterpret_cast<std::uint8_t **>(ptr)) = head;
-        head = reinterpret_cast<std::uint8_t*>(ptr);
+        head = reinterpret_cast<std::uint8_t *>(ptr);
     }
 
 private:
-    std::uint8_t memmory[countBlock]; //countBlock * sizeof T подправить 
+    std::uint8_t memmory[countBlock * sizeof(T)]; 
     std::uint8_t *head;
 };
