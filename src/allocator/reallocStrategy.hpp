@@ -11,20 +11,6 @@
     https://github.com/azbyx/
 */
 
-void test_array_strategy(std::uint8_t *memmory, std::size_t countBlock, std::size_t size_block)
-{
-    for (std::size_t i = 0; i < countBlock; ++i)
-    {
-        printf("adrees block %lu = %p\n", i, memmory + i * size_block);
-    }
-
-    printf("\n");
-
-    for (std::size_t i = 0; i < countBlock; ++i)
-    {
-        printf("adrees block %lu = %p\n", i, *(reinterpret_cast<uint8_t **>(memmory + i * size_block)));
-    }
-}
 template <typename T, std::size_t countBlock>
 class realloc_strategy
 {
