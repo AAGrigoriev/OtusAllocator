@@ -7,10 +7,10 @@
     @brief Strategy without allocation 
 */
 template <typename T, std::size_t countBlock>
-class array_staregy
+class list_strategy
 {
 public:
-    array_staregy()
+    list_strategy()
     {
         std::size_t chunkCount = countBlock - 1;
         for (std::size_t i = 0; i < chunkCount; ++i)
@@ -22,7 +22,7 @@ public:
         head = memmory;
     }
 
-    ~array_staregy() = default;
+    ~list_strategy() = default;
 
     T *allocate(std::size_t n = 1)
     {

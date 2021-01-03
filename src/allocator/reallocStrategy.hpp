@@ -33,7 +33,6 @@ public:
     {
         pointer_free = add_list();
         v_pointer.push_back(pointer_free);
-        test_init();
     }
 
     realloc_strategy(const realloc_strategy &otther) = delete;

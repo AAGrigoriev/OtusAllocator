@@ -3,7 +3,7 @@
 #include <list>
 
 #include "otusAllocator.hpp"
-#include "arrayStrategy.hpp"
+#include "listStrategy.hpp"
 #include "simpleList.hpp"
 #include "reallocStrategy.hpp"
 
@@ -13,7 +13,7 @@ using namespace slist;
 int main()
 {
 
-  //  std::list<double, Simple_Allocator<double, 3, array_staregy>> list;
+  //  std::list<double, Simple_Allocator<double, 3, list_strategy>> list;
   //  list.push_back(1.0);
   //  list.push_back(1.0);
   //  list.push_back(1.0);
