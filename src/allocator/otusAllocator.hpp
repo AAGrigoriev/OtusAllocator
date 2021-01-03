@@ -9,20 +9,20 @@
 namespace simple_allocator
 {
     template <typename T, std::size_t countBlock, template <class, std::size_t> class Strategy>
-    struct Light_Pool_Allocator
+    struct Simple_Allocator
     {
         using value_type = T;
 
-        Light_Pool_Allocator() = default;
+        Simple_Allocator() = default;
 
         template <typename U>
         struct rebind
         {
-            using other = Light_Pool_Allocator<U, countBlock, Strategy>;
+            using other = Simple_Allocator<U, countBlock, Strategy>;
         };
 
         template <typename U>
-        Light_Pool_Allocator(const Light_Pool_Allocator<U, countBlock, Strategy> &) {}
+        Simple_Allocator(const Simple_Allocator<U, countBlock, Strategy> &) {}
 
         T *allocate(std::size_t n);
 
@@ -45,13 +45,13 @@ namespace simple_allocator
     };
 
     template <typename T, std::size_t countBlock, template <class, std::size_t> class Strategy>
-    T *Light_Pool_Allocator<T, countBlock, Strategy>::allocate(std::size_t n)
+    T *Simple_Allocator<T, countBlock, Strategy>::allocate(std::size_t n)
     {
         return alloc_strategy.allocate(n);
     }
 
     template <typename T, std::size_t countBlock, template <class, std::size_t> class Strategy>
-    void Light_Pool_Allocator<T, countBlock, Strategy>::deallocate(T *p, std::size_t n)
+    void Simple_Allocator<T, countBlock, Strategy>::deallocate(T *p, std::size_t n)
     {
         alloc_strategy.deallocate(p, n);
     }
@@ -69,13 +69,13 @@ namespace simple_allocator
     //   }
 
     template <class T, class U, std::size_t N, template <class, std::size_t> class Strategy>
-    constexpr bool operator==(const Light_Pool_Allocator<T, N, Strategy> &, const Light_Pool_Allocator<U, N, Strategy> &) noexcept
+    constexpr bool operator==(const Simple_Allocator<T, N, Strategy> &, const Simple_Allocator<U, N, Strategy> &) noexcept
     {
         return false;
     }
 
     template <class T, class U, std::size_t N, template <class, std::size_t> class Strategy>
-    constexpr bool operator!=(const Light_Pool_Allocator<T, N, Strategy> &, const Light_Pool_Allocator<U, N, Strategy> &) noexcept
+    constexpr bool operator!=(const Simple_Allocator<T, N, Strategy> &, const Simple_Allocator<U, N, Strategy> &) noexcept
     {
         return true;
     }

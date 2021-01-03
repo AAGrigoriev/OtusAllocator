@@ -12,7 +12,7 @@ class array_staregy
 public:
     array_staregy()
     {
-        std::size_t chunkCount = countBlock - 1; 
+        std::size_t chunkCount = countBlock - 1;
         for (std::size_t i = 0; i < chunkCount; ++i)
         {
             std::uint8_t *chunkPtr = memmory + (i * sizeof(T));
@@ -26,12 +26,16 @@ public:
 
     T *allocate(std::size_t n = 1)
     {
-        assert(head != nullptr && "end of memmory in array_staregy");
+        if (head == nullptr)
+            throw std::bad_alloc();
+
         assert(n == 1 && "allocate only one object");
 
         T *out = reinterpret_cast<T *>(head);
 
         head = *(reinterpret_cast<std::uint8_t **>(head));
+
+        return out;
     }
 
     void deallocate(T *ptr, std::size_t n = 1)
@@ -41,6 +45,6 @@ public:
     }
 
 private:
-    std::uint8_t memmory[countBlock * sizeof(T)]; 
+    std::uint8_t memmory[countBlock * sizeof(T)];
     std::uint8_t *head;
 };
