@@ -17,7 +17,7 @@ set_target_properties(main
 )
 
 
-install(TARGETS Main RUNTIME DESTINATION bin)
+install(TARGETS main RUNTIME DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
